@@ -1,6 +1,6 @@
 # arch1-project3-lcd
 ## final project
-
+games...
 ## msquares
 program lights up small squares of different colors every half second(?)
 ## lcdLib
