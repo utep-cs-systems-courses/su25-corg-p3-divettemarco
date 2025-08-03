@@ -34,6 +34,11 @@ void green_toggle(){
   P1OUT ^= LED_GREEN;
 }
 
+/* toggle leds */
+void led_toggle(){
+  P1OUT ^= LED_GREEN & LED_RED;
+}
+
 /* set up leds */
 void led_init(){
   P1DIR |= LEDS; // bits attached to leds are output

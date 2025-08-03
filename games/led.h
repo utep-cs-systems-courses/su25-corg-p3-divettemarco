@@ -17,5 +17,6 @@ void red_off();
 void green_off();
 void red_toggle();
 void green_toggle();
+void led_toggle();
 
 #endif
