@@ -3,10 +3,11 @@
 
 typedef enum{
   STATE_OFF,
-  STATE_TOGGLE,
-  STATE_DIM_TO_BRIGHT,
-  STATE_WILD,
-  STATE_BUZZ
+  STATE_TV,
+  STATE_TV_BW,
+  STATE_GO,
+  STATE_STOP,
+  STATE_SOS
 } State;
 
 extern volatile State currState;

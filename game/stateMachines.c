@@ -2,6 +2,14 @@
 #include "stateMachines.h"
 #include "led.h"
 #include "buzzer.h"
+#include "switches.h"
+
+void initialize(){
+  led_init();
+  switch_init();
+  buzzer_init();
+  //lcd_init();
+}
 
 /* State 2 variables */
 int s2greenCount = 0;
@@ -20,6 +28,16 @@ void turn_off_update(){
   green_off();
   red_off();
   buzzer_off();
+}
+
+void buzz_toggle_update(){
+  static int toggleBuzz = 0;
+  if (toggleBuzz) {
+    buzzer_off();
+    toggleBuzz = 0;
+  }
+  buzzer_set_period(2000);
+  toggleBuzz = 1;
 }
 
 /* State 1: toggle red and green led */

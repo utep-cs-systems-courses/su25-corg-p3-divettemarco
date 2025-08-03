@@ -1,6 +1,10 @@
 #ifndef stateMachine_included
 #define stateMachine_included
 
+void initialize();
+
+void buzz_toggle_update();
+
 /* state 0 */
 void turn_off_update();
 

@@ -2,16 +2,13 @@
 #include <msp430.h>
 #include "game.h"
 #include "libTimer.h"
-#include "led.h"
-#include "switches.h"
-#include "buzzer.h"
+#include "stateMachines.h"
 
 volatile State currState = STATE_OFF;
 
 int main(void) {
-  led_init();
-  switch_init();
-  buzzer_init();
+  /* initialize everything */
+  initialize();
   configureClocks();/* setup master oscillator, CPU & peripheral clocks */
   enableWDTInterrupts();/* enable periodic interrupt */
 
