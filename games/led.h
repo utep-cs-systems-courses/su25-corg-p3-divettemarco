@@ -1,6 +1,5 @@
 #ifndef led_included
 #define  led_include
-d
 #include <msp430.h>
 
 #define LED_RED BIT0               // P1.0
