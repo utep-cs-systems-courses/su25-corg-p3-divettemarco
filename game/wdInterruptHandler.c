@@ -11,19 +11,19 @@ __interrupt_vec(WDT_VECTOR) WDT(){/* 250 interrupts/sec */
   /* check case and switch if necessary */
   switch (currState)
   {
-  /* start with buzzer and leds off*/
+  /* turn off leds, buzzer, and clear screen with zzz */
   case STATE_OFF:
-    turn_off_update();
+    system_zzz();
     break;
 
   case STATE_TV:
-    turn_off_update();
+    system_zzz();
     break;
 
   /* toggle red and green on and off every sec; if green is on, red is off and vice versa  */
   case STATE_TV_BW:
     if (secCount >= 250){
-      led_toggle_update();
+      system_zzz();
     }
     break;
 

@@ -2,11 +2,13 @@
 #define stateMachine_included
 
 void initialize();
+void resetVars();
 
 void buzz_toggle_update();
 
-/* state 0 */
-void turn_off_update();
+/* state 0: system sleeping */
+void system_zzz();
+extern int sleeping;
 
 /* state 1 */
 void led_toggle_update();

@@ -11,8 +11,12 @@ void initialize(){
   switch_init();
   buzzer_init();
   lcd_init();
-  //u_char width = screenWidth, height = screenHeight;
-  clearScreen(COLOR_RED);
+}
+
+int sleeping = 0;
+
+void reset_vars(){
+  sleeping = 0;
 }
 
 /* State 2 variables */
@@ -27,11 +31,16 @@ int s3buzzPeriod = 4000;
 const int s3buzzLimit = 1000;
 
 
-/* State 0: turn off leds and buzzer */
-void turn_off_update(){
-  green_off();
-  red_off();
-  buzzer_off();
+/* State 0: system sleeping */
+void system_zzz(){
+  if (!sleeping){
+    green_off();
+    red_off();
+    buzzer_off();
+    clearScreen(COLOR_NAVY);
+    drawString5x7(20, 30, "ZZZ", COLOR_GREEN, COLOR_RED);
+    sleeping = 1;
+  }
 }
 
 void buzz_toggle_update(){
