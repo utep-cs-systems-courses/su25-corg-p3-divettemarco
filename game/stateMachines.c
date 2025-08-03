@@ -3,12 +3,16 @@
 #include "led.h"
 #include "buzzer.h"
 #include "switches.h"
+#include "lcdutils.h"
+#include "lcddraw.h"
 
 void initialize(){
   led_init();
   switch_init();
   buzzer_init();
-  //lcd_init();
+  lcd_init();
+  //u_char width = screenWidth, height = screenHeight;
+  clearScreen(COLOR_RED);
 }
 
 /* State 2 variables */
