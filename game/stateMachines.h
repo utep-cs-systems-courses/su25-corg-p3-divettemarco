@@ -2,29 +2,15 @@
 #define stateMachine_included
 
 void initialize();
+
+/* variables to assist in the methods */
 void resetVars();
+int sleeping, buzzing, ledBlink;
 
-void buzz_toggle_update();
-
-/* state 0: system sleeping */
+/* methods for states to use */
 void system_zzz();
-extern int sleeping;
-
-/* state 1 */
+void buzz_toggle_update();
+void sos_toggle_update();
 void led_toggle_update();
-
-extern int toggleState;
-
-/* state 2 */
-void dim_to_bright_update();
-void dim_to_bright_limit_update();
-
-extern int greenLimit, greenCount, redLimit, redCount;
-
-/* state 3 */
-void wild_update();
-
-/* state 4 */
-void update_buzz();
 
 #endif // included

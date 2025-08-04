@@ -14,24 +14,16 @@ void initialize(){
 }
 
 int sleeping = 0;
+int buzzing = 0;
+int ledBlink = 0;
 
 void reset_vars(){
   sleeping = 0;
+  buzzing = 0;
+  ledBlink = 0;
 }
 
-/* State 2 variables */
-int s2greenCount = 0;
-int s2greenLimit = 4;
-int s2redCount = 0;
-int s2redLimit = 8;
-
-/* State 3 variables */
-int s3GreenToggleState = 0;
-int s3buzzPeriod = 4000;
-const int s3buzzLimit = 1000;
-
-
-/* State 0: system sleeping */
+/* sleep system if not already down */
 void system_zzz(){
   if (!sleeping){
     green_off();
@@ -43,103 +35,54 @@ void system_zzz(){
   }
 }
 
+/* toggle buzzer */
 void buzz_toggle_update(){
-  static int toggleBuzz = 0;
-  if (toggleBuzz) {
-    buzzer_off();
-    toggleBuzz = 0;
-  }
-  buzzer_set_period(2000);
-  toggleBuzz = 1;
-}
-
-/* State 1: toggle red and green led */
-void led_toggle_update(){
-  static int toggleState = 0;
-  if (toggleState){
-    red_on();
-    green_off();
-    toggleState = 0;
-  }else{
-    red_off();
-    green_on();
-    toggleState = 1;
-  }
-}
-
-/* State 2: change red and green led from dim to bright */
-
-void dim_to_bright_update(){
-  s2greenCount++;
-  s2redCount++;
-
-  if (s2greenCount >= s2greenLimit) {
-    s2greenCount = 0;
-    green_on();
-  } else{
-    green_off();
-  }
-
-  if(s2redCount >= s2redLimit) {
-    s2redCount = 0;
-    red_on();
-  }else{
-    red_off();
-  }
-}
-
-void dim_to_bright_limit_update(){
-  s2greenLimit--;
-  s2redLimit--;
-
-  if(s2greenLimit <= 0)
-    s2greenLimit = 8;
-
-  if (s2redLimit <= 0)
-    s2redLimit = 8;
-}
-
-/* State 3: blink leds at different speeds and change buzzer every second*/
-void wild_update(){
-  if (s3buzzPeriod <= s3buzzLimit) {
-    s3buzzPeriod = 4000;
-  } else {
-    s3buzzPeriod -= 100;
-  }
-  buzzer_set_period(s3buzzPeriod);
-  red_toggle();
-  if (s3GreenToggleState) {
-    s3GreenToggleState = 0;
-    green_toggle();
-  }else{
-    s3GreenToggleState = 1;
-  }
-}
-
-
-/* State 4: cycle between buzzer states */
-void update_buzz(){
-  static int buzzState = 0;
-  switch(buzzState){
-  case 0:
-    buzzState++;
-    buzzer_set_period(1000);
-    break;
-  case 1:
-    buzzState++;
+  if (!buzzing) {
     buzzer_set_period(1500);
-    break;
-  case 2:
-    buzzState++;
-    buzzer_set_period(2000);
-    break;
-  case 3:
-    buzzState++;
-    buzzer_set_period(2500);
-    break;
-  case 4:
-    buzzState = 0;
+    buzzing = 1;
+  }else{
     buzzer_off();
-    break;
+    buzzing = 0;
   }
 }
+
+/* toggle "sos" display on lcd */
+void sos_toggle_update(){
+  int col = 0;
+  int row = 0;
+  int print_sos = 1;
+  clearScreen(COLOR_RED);
+  while (print_sos){
+    drawString5x7(col, row, "SOS", COLOR_DARK_GREEN, COLOR_RED);
+    col += 5;
+    row += 10;
+    if (col >= 120){
+      print_sos = 0;
+      col = 120;
+      row = 0;
+    }
+  }
+  print_sos = 1;
+  while (print_sos) {
+    drawString5x7(col, row, "SOS", COLOR_DARK_GREEN, COLOR_RED);
+    col -= 5;
+    row += 10;
+    if (col <= 0){
+      print_sos = 0;
+    }
+  }
+}
+
+/* toggle red and green leds */
+void led_toggle_update(){
+  if (!ledBlink){
+    red_on();
+    green_off();
+    ledBlink = 1;
+  }else{
+    red_off();
+    green_on();
+    ledBlink = 0;
+  }
+}
+

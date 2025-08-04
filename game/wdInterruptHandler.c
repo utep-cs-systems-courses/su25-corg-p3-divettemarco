@@ -7,6 +7,7 @@ void
 __interrupt_vec(WDT_VECTOR) WDT(){/* 250 interrupts/sec */
   static int secCount = 0;
   static int halfSecCount = 0;
+  static int quarterSecCount = 0;
   
   /* check case and switch if necessary */
   switch (currState)
@@ -27,35 +28,21 @@ __interrupt_vec(WDT_VECTOR) WDT(){/* 250 interrupts/sec */
     }
     break;
 
-  /* make leds go from bright to dim */
+  /* make car move and stop */
   case STATE_GO:
-    /* update leds and their counts */
-    dim_to_bright_update();
-
-    /* update led limit every second*/
-    if (secCount >= 250) {
-      dim_to_bright_limit_update();
-    }
-    break;
-
-  /* update buzzer each second, leds on and off at different speeds */
-  case STATE_STOP:
-    /* update buzzer and green led every second */
-    if (secCount >= 250) {
-      wild_update();
-    }
+    /* update location of car and print new display */
+    /* if 5 sec mark, stop car, turn on red led */
     break;
 
   /* sos written on lcd, siren on, lights flashing */
   case STATE_SOS:
-    /*
-    if (secCount >= 250) {
-      
-	}
-    */
     if (halfSecCount >= 125) {
       led_toggle_update();
       buzz_toggle_update();
+      //sos_toggle_update();
+    }
+    if (quarterSecCount >= 62){
+      sos_toggle_update();
     }
     break;
   }
@@ -66,6 +53,10 @@ __interrupt_vec(WDT_VECTOR) WDT(){/* 250 interrupts/sec */
   if (halfSecCount >= 125) {
     halfSecCount = 0;
   }
+  if (quarterSecCount >= 62){
+    quarterSecCount = 0;
+  }
   secCount++;
   halfSecCount++;
+  quarterSecCount++;
 }
