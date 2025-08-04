@@ -23,6 +23,11 @@ void drawPixel(u_char col, u_char row, u_int colorBGR);
  */
 void fillRectangle(u_char colMin, u_char rowMin, u_char width, u_char height, u_int colorBGR);
 
+/** Draw vehicle 
+ * 
+ */
+void drawVeh(u_char colMin, u_char rowMin, u_int colorOne, u_int colorTwo);
+
 /** Clear screen (fill with color)
  *  
  *  \param colorBGR The color to fill screen

@@ -1,4 +1,5 @@
 #include <msp430.h>
+#include <stddef.h>
 #include "stateMachines.h"
 #include "led.h"
 #include "buzzer.h"
@@ -13,19 +14,29 @@ void initialize(){
   lcd_init();
 }
 
-int sleeping = 0;
-int buzzing = 0;
-int ledBlink = 0;
-int tvColor = 0;
-int tvCol = 150;
-int tvRow = 20;
+/* assembly */
+extern void reset_vars();
 
+int sleeping = 0, buzzing = 0, ledBlink = 0, tvColor = 0, greenLight = 1, goCar = 0;
+int setZero = 0, setOne = 1; 
+
+int tvColorP[8] = {COLOR_WHITE, COLOR_YELLOW, COLOR_SKY_BLUE, COLOR_GREEN, COLOR_HOT_PINK, COLOR_RED, COLOR_BLUE, COLOR_BLACK};
+int bNWColorP[8] = {COLOR_GRAY, COLOR_BLACK, COLOR_WHITE, COLOR_GRAY, COLOR_BLACK, COLOR_WHITE, COLOR_GRAY, COLOR_BLACK};
+
+int *colorPattern = &tvColorP[0];
+int *blackNWhitePattern = &bNWColorP[0];
+
+int tvWidth = 150;
+int tvHeight = 25;
+
+/*
 void reset_vars(){
   sleeping = 0;
   buzzing = 0;
   ledBlink = 0;
   tvColor = 0;
 }
+*/
 
 /* sleep system if not already down */
 void system_zzz(){
@@ -34,37 +45,76 @@ void system_zzz(){
     red_off();
     buzzer_off();
     clearScreen(COLOR_NAVY);
-    drawString5x7(20, 30, "ZZZ", COLOR_GREEN, COLOR_RED);
+    drawString5x7(5, 30, "2: tv colors and b&w", COLOR_SKY_BLUE, COLOR_NAVY);
+    drawString5x7(5, 50, "3: car go and stop", COLOR_SKY_BLUE, COLOR_NAVY);
+    drawString5x7(5, 70, "4: SOS SOS SOS", COLOR_SKY_BLUE, COLOR_NAVY);
     sleeping = 1;
   }
 }
 
-/* display tv color pattern if not already displayed */
+/* toggle between tv color pattern or black and white pattern */
 void system_tv_color(){
   if (!tvColor){
     green_off();
     red_off();
     buzzer_off();
-    int colStart = 0;
-    int rowStart = 0;
-    fillRectangle(colStart, rowStart, tvCol, tvRow, COLOR_WHITE);
-    rowStart += 20;
-    fillRectangle(colStart, rowStart, tvCol, tvRow, COLOR_YELLOW);
-    rowStart += 20;
-    fillRectangle(colStart, rowStart, tvCol, tvRow, COLOR_SKY_BLUE);
-    rowStart += 20;
-    fillRectangle(colStart, rowStart, tvCol, tvRow, COLOR_GREEN);
-    rowStart += 20;
-    fillRectangle(colStart, rowStart, tvCol, tvRow, COLOR_HOT_PINK);
-    rowStart += 20;
-    fillRectangle(colStart, rowStart, tvCol, tvRow, COLOR_RED);
-    rowStart += 20;
-    fillRectangle(colStart, rowStart, tvCol, tvRow, COLOR_BLUE);
-    rowStart += 20;
-    fillRectangle(colStart, rowStart, tvCol, tvRow+5, COLOR_BLACK);
+    set_tv(colorPattern);
     tvColor = 1;
+  }else{
+    red_on();
+    green_off();
+    buzzer_off();
+    set_tv(blackNWhitePattern);
+    //set_tv(colorPattern);
+    tvColor = 0;
+  }
+  set_tv(colorPattern);
+}
+
+void set_tv(int *colorScheme){
+  int *currColor = colorScheme;
+  int colStart = 0;
+  int rowStart = 0;
+  clearScreen(*currColor);
+  while(rowStart < 160){
+    fillRectangle(colStart, rowStart, tvWidth, tvHeight, *currColor);
+    rowStart += 20;
+    currColor++;
   }
 }
+
+void go_update(){
+  buzzer_off();
+  static int currCol = 0;
+  static int rowStart = 90;
+  if(greenLight){
+    green_on();
+    red_off();
+    clearScreen(COLOR_HOT_PINK);
+    drawVeh(currCol, rowStart, COLOR_BLUE, COLOR_BLACK);
+    if(currCol >= 120){
+      currCol = 0;
+    }else{
+      currCol += 10;
+    }
+  }else{
+    red_on();
+    green_off();
+    clearScreen(COLOR_HOT_PINK);
+    drawVeh(currCol, rowStart, COLOR_BLUE, COLOR_BLACK);
+  }
+}
+
+void go_toggle(){
+  goCar++;
+  if(goCar == 2){
+    greenLight = 0;
+    goCar = 0;
+  }else{
+    greenLight = 1;
+  }
+}
+
 
 /* toggle buzzer */
 void buzz_toggle_update(){
@@ -72,7 +122,7 @@ void buzz_toggle_update(){
     buzzer_set_period(1500);
     buzzing = 1;
   }else{
-    buzzer_off();
+    buzzer_set_period(2500);
     buzzing = 0;
   }
 }

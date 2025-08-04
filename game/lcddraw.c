@@ -37,6 +37,22 @@ void fillRectangle(u_char colMin, u_char rowMin, u_char width, u_char height,
   }
 }
 
+void drawVeh(u_char colMin, u_char rowMin, u_int colorOne, u_int colorTwo){
+  int square = 5;
+  fillRectangle(colMin+(2*square), rowMin, (2*square), square, colorOne);
+
+  fillRectangle(colMin+(2*square), rowMin+(1*square), square, square, colorOne);
+  fillRectangle(colMin+(4*square), rowMin+(1*square), square, square, colorOne);
+  fillRectangle(colMin+(3*square), rowMin+(1*square), square, square, colorTwo);
+
+  fillRectangle(colMin, rowMin+(2*square), (square*5), square, colorOne);
+
+  fillRectangle(colMin+(1*square), rowMin+(3*square), square, square, colorTwo);
+  fillRectangle(colMin+(3*square), rowMin+(3*square), square, square, colorTwo);
+}
+
+
+
 /** Clear screen (fill with color)
  *  
  *  \param colorBGR The color to fill screen

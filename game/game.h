@@ -4,9 +4,7 @@
 typedef enum{
   STATE_OFF,
   STATE_TV,
-  STATE_TV_BW,
   STATE_GO,
-  STATE_STOP,
   STATE_SOS
 } State;
 

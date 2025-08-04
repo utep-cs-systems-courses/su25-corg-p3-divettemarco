@@ -8,6 +8,7 @@ __interrupt_vec(WDT_VECTOR) WDT(){/* 250 interrupts/sec */
   static int secCount = 0;
   static int halfSecCount = 0;
   static int quarterSecCount = 0;
+  static int threeSecCount = 0;
   
   /* check case and switch if necessary */
   switch (currState)
@@ -18,13 +19,8 @@ __interrupt_vec(WDT_VECTOR) WDT(){/* 250 interrupts/sec */
     break;
 
   case STATE_TV:
-    system_tv_color();
-    break;
-
-  /* toggle red and green on and off every sec; if green is on, red is off and vice versa  */
-  case STATE_TV_BW:
     if (secCount >= 250){
-      system_zzz();
+      system_tv_color();
     }
     break;
 
@@ -32,6 +28,12 @@ __interrupt_vec(WDT_VECTOR) WDT(){/* 250 interrupts/sec */
   case STATE_GO:
     /* update location of car and print new display */
     /* if 5 sec mark, stop car, turn on red led */
+    if(secCount >= 250){
+      go_update();
+    }
+    if(threeSecCount >= 750){
+      go_toggle();
+    }
     break;
 
   /* sos written on lcd, siren on, lights flashing */
@@ -39,7 +41,6 @@ __interrupt_vec(WDT_VECTOR) WDT(){/* 250 interrupts/sec */
     if (halfSecCount >= 125) {
       led_toggle_update();
       buzz_toggle_update();
-      //sos_toggle_update();
     }
     if (quarterSecCount >= 62){
       sos_toggle_update();
@@ -56,7 +57,11 @@ __interrupt_vec(WDT_VECTOR) WDT(){/* 250 interrupts/sec */
   if (quarterSecCount >= 62){
     quarterSecCount = 0;
   }
+  if (threeSecCount >= 750) {
+    threeSecCount = 0;
+  }
   secCount++;
   halfSecCount++;
   quarterSecCount++;
+  threeSecCount++;
 }
