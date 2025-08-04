@@ -16,11 +16,15 @@ void initialize(){
 int sleeping = 0;
 int buzzing = 0;
 int ledBlink = 0;
+int tvColor = 0;
+int tvCol = 150;
+int tvRow = 20;
 
 void reset_vars(){
   sleeping = 0;
   buzzing = 0;
   ledBlink = 0;
+  tvColor = 0;
 }
 
 /* sleep system if not already down */
@@ -32,6 +36,33 @@ void system_zzz(){
     clearScreen(COLOR_NAVY);
     drawString5x7(20, 30, "ZZZ", COLOR_GREEN, COLOR_RED);
     sleeping = 1;
+  }
+}
+
+/* display tv color pattern if not already displayed */
+void system_tv_color(){
+  if (!tvColor){
+    green_off();
+    red_off();
+    buzzer_off();
+    int colStart = 0;
+    int rowStart = 0;
+    fillRectangle(colStart, rowStart, tvCol, tvRow, COLOR_WHITE);
+    rowStart += 20;
+    fillRectangle(colStart, rowStart, tvCol, tvRow, COLOR_YELLOW);
+    rowStart += 20;
+    fillRectangle(colStart, rowStart, tvCol, tvRow, COLOR_SKY_BLUE);
+    rowStart += 20;
+    fillRectangle(colStart, rowStart, tvCol, tvRow, COLOR_GREEN);
+    rowStart += 20;
+    fillRectangle(colStart, rowStart, tvCol, tvRow, COLOR_HOT_PINK);
+    rowStart += 20;
+    fillRectangle(colStart, rowStart, tvCol, tvRow, COLOR_RED);
+    rowStart += 20;
+    fillRectangle(colStart, rowStart, tvCol, tvRow, COLOR_BLUE);
+    rowStart += 20;
+    fillRectangle(colStart, rowStart, tvCol, tvRow+5, COLOR_BLACK);
+    tvColor = 1;
   }
 }
 

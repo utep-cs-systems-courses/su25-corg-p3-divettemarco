@@ -7,12 +7,12 @@
 
 void
 __interrupt_vec(PORT2_VECTOR) Port_2(){
-  // state 1: toggle leds every sec
+  // state 1 tv colors
   if (P2IFG & SW1){
     currState = STATE_TV;
     reset_vars();
   }
-  // state 2: change leds from dim to bright
+  // state 2 tv B&W
   else if (P2IFG & SW2){
     currState = STATE_TV_BW;
     //turn_off_update();

@@ -18,7 +18,7 @@ __interrupt_vec(WDT_VECTOR) WDT(){/* 250 interrupts/sec */
     break;
 
   case STATE_TV:
-    system_zzz();
+    system_tv_color();
     break;
 
   /* toggle red and green on and off every sec; if green is on, red is off and vice versa  */
